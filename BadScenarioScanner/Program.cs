@@ -6,6 +6,18 @@ namespace BadScenarioScanner
 {
     class Program
     {
+        /// <summary>
+        /// Return process exit code 1, which will be readable by %ERRORLEVEL% in a .bat file.
+        /// This indicates that the program failed for some reason.
+        /// </summary>
+        const int processExitFail = 1;
+
+        /// <summary>
+        /// Return process exit code 0, which will be readable by %ERRORLEVEL% in a .bat file.
+        /// This indicates that the program succeeded.
+        /// </summary>
+        const int processExitSuccess = 0;
+
         static void ScanForSuspiciousFeatureFiles(string rootPath)
         {
             var scenarioRegex = new Regex("^[ \t]*Scenario:");
@@ -13,6 +25,7 @@ namespace BadScenarioScanner
             var examplesRegex = new Regex("^[ \t]*Examples:");
 
             int countOfFilesExamined = 0;
+            int bugsFound = 0;
 
             foreach (var path in Directory.EnumerateFiles(rootPath, "*.feature", SearchOption.AllDirectories))
             {
@@ -45,6 +58,7 @@ namespace BadScenarioScanner
                         if (isSuspectedBug(previousInterestingLine, line))
                         {
                             showLineReportInVisualStudioStyle(path, lineNumber, "Suspicious Examples table without Scenario Outline.");
+                            bugsFound++;
                         }
 
                         previousInterestingLine = line;
@@ -54,7 +68,7 @@ namespace BadScenarioScanner
                 }
             }
 
-            Console.WriteLine($"{countOfFilesExamined} Feature files were examined.");
+            Console.WriteLine($"{countOfFilesExamined} Feature files were examined and {bugsFound} bugs were found");
         }
 
 
@@ -66,9 +80,7 @@ namespace BadScenarioScanner
                 Console.WriteLine(@"eg: C:\dev\myapp\src");
                 Console.WriteLine("SpecFlow .feature files are automatically selected.");
 
-                // Return process exit code 1, which will be readable by %ERRORLEVEL% in a .bat file.
-                // This indicates that the program failed for some reason.
-                return 1;  
+                return processExitFail;  
             }
 
             try
@@ -81,14 +93,10 @@ namespace BadScenarioScanner
                 Console.WriteLine($"Error: {e.Message}");
                 // Possibly log the detail eg: stack trace in a log file, to hide it from the user.
 
-                // Return process exit code 1, which will be readable by %ERRORLEVEL% in a .bat file.
-                // This indicates that the program failed for some reason.
-                return 1;
+                return processExitFail;
             }
 
-            // Return process exit code 0, which will be readable by %ERRORLEVEL% in a .bat file.
-            // This indicates that the program succeeded.
-            return 0;
+            return processExitSuccess;
         }
     }
 }
