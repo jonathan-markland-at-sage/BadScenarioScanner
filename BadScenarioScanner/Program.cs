@@ -12,6 +12,8 @@ namespace BadScenarioScanner
             var scenarioOutlineRegex = new Regex("^[ \t]*Scenario Outline:");
             var examplesRegex = new Regex("^[ \t]*Examples:");
 
+            //test
+
             int countOfFilesExamined = 0;
 
             foreach (var path in Directory.EnumerateFiles(rootPath, "*.feature", SearchOption.AllDirectories))
