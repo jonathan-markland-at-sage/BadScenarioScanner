@@ -10,17 +10,17 @@ This tool is compatible with Visual Studio, and can be added to the "Tools | Ext
 
 To do this:
 
-1. Open Tools | External Tools... in Visual Studio.
+1. Open "Tools | External Tools..." in Visual Studio.
 2. Add a new entry, with title "Bad Scenario Scanner"
 3. In the Command box, browse to the BadScenarioScanner.EXE file
 4. In the Arguments box, enter "$(SolutionDir)".
 5. Be sure to tick the "Use Output Window" box.
 
+Rationale
+---------
+Here is an example of a suspicious scenario, where the Examples table really belongs under a *Scenario Outline*:
 
-
-Here is an example of a suspicious scenario, where the Examples table really belongs under a Scenario Outline:
-
-```
+```gherkin
 Scenario: Everyone is happy doing this and that
     Given something exists
     And something else is the case
@@ -37,7 +37,7 @@ Scenario: Everyone is happy doing this and that
 
 Here is an example of the intended scenario - namely, done as a Scenario Outline:
 
-```
+```gherkin
 Scenario Outline: Everyone is happy doing this and that
     Given something exists
     And something else is the case
